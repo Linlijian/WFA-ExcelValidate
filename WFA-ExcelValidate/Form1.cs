@@ -1,4 +1,5 @@
-﻿using ExcelDataReader;
+﻿using AutoUpdaterDotNET;
+using ExcelDataReader;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace WFA_ExcelValidate
         public Form1()
         {
             InitializeComponent();
+            AutoUpdater.Start("https://github.com/Linlijian/WFA-ExcelValidate/blob/master/WFA-ExcelValidate/AutoUpdater.xml");
         }
 
         private void button1_Click(object sender, EventArgs e)

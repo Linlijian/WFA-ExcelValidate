@@ -18,7 +18,7 @@ namespace WFA_ExcelValidate
         public Form1()
         {
             InitializeComponent();
-            AutoUpdater.Start("https://github.com/Linlijian/WFA-ExcelValidate/blob/master/WFA-ExcelValidate/AutoUpdater.xml");
+            AutoUpdater.Start("https://raw.githubusercontent.com/Linlijian/WFA-ExcelValidate/master/WFA-ExcelValidate/AutoUpdater.xml");
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -17,10 +17,11 @@ namespace WFA_ExcelValidate
     {
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();            
             AutoUpdater.Start("https://raw.githubusercontent.com/Linlijian/WFA-ExcelValidate/master/WFA-ExcelValidate/AutoUpdater.xml");
         }
 
+        string path;
         private void button1_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Filter = "Excel Files(.xlsx)|*.xlsx";
@@ -35,6 +36,7 @@ namespace WFA_ExcelValidate
                     FileStream stream = File.Open(openFileDialog1.FileName, FileMode.Open, FileAccess.Read);
                     IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
                     DataSet result = excelReader.AsDataSet();
+                    path = openFileDialog1.FileName;
 
                     //string REPORT_CODE = "ช0200";
                     //string VALIDATE_X = "1.0.0.0.0,1.1.0.0.0,1.2.0.0.0,1.3.0.0.0,2.0.0.0.0";
@@ -43,10 +45,10 @@ namespace WFA_ExcelValidate
                     var area = txtDiff.Text.Replace("\r\n", ",");
 
                     string REPORT_CODE = txtReportCode.Text;
-                    string VALIDATE_X = txtValidateX.Text;
-                    string VALIDATE_Y = txtValidateY.Text = area;
+                    string VALIDATE_X = txtValidateX.Text.Replace("\r\n", ",");
+                    string VALIDATE_Y = txtValidateY.Text.Replace("\r\n", ",");
 
-
+                    button2.Enabled = true;
 
                     var people = new List<DemoModel>();
                     while (excelReader.Read())
@@ -146,37 +148,302 @@ namespace WFA_ExcelValidate
                                     REGULAR_EXPRESSIONS = "",
                                     START_EXCEL_ROW = "",
                                     ACTIVE = "N",
-                                    REMARK = "MISS 'VALIDATE_X' IN TEMPLATE"
+                                    REMARK = "MISS 'VALIDATE_X' IN TEMPLAT"
                                 });
                                 output_report.Add(output[0]);
 
                                 //new
-                                output = new List<DemoModel>();
-                                output.Add(new DemoModel
+                                //output = new List<DemoModel>();
+                                //output.Add(new DemoModel
+                                //{
+                                //    COM_GROUP_ID = "",
+                                //    RPT_TYPE_ID = "",
+                                //    VALIDATE_ID = "",
+                                //    REPORT_CODE = REPORT_CODE,
+                                //    VALIDATE_X = "INPUTE VALIDATE_X " + valid_x,
+                                //    VALIDATE_Y = valid_y,
+                                //    DATA_TYPE = "",
+                                //    IS_NOTNULL = "",
+                                //    REGULAR_EXPRESSIONS = "",
+                                //    START_EXCEL_ROW = "",
+                                //    ACTIVE = "N",
+                                //    REMARK = "MISS 'VALIDATE_X' IN TEMPLATE"
+                                //});
+                                //output_report.Add(output[0]);
+                            }
+
+                            List<DemoModel> miss = new List<DemoModel>();
+                            //old บอกให้รู้ว่า valid_x ใดๆ ที่ขาดหายไป
+                            miss.Add(new DemoModel
+                            {
+                                COM_GROUP_ID = "",
+                                RPT_TYPE_ID = "",
+                                VALIDATE_ID = "",
+                                REPORT_CODE = REPORT_CODE,
+                                VALIDATE_X = valid_x,
+                                VALIDATE_Y = "",
+                                DATA_TYPE = "",
+                                IS_NOTNULL = "",
+                                REGULAR_EXPRESSIONS = "",
+                                START_EXCEL_ROW = "",
+                                ACTIVE = "N",
+                                REMARK = "MISE "+ valid_x + " IN TEMPLATE"
+                            });
+                            output_report.Add(miss[0]);
+
+                        }
+
+                        //del
+                        foreach(var del in row_x)
+                        {
+                            report_model.Remove(del);
+                        }                        
+                    }
+
+                    //add under select
+                    List<DemoModel> underSelect = new List<DemoModel>();
+                    foreach (var add in report_model)
+                    {
+                        underSelect = new List<DemoModel>();
+                        underSelect.Add(new DemoModel
+                        {
+                            COM_GROUP_ID = add.COM_GROUP_ID,
+                            RPT_TYPE_ID = add.RPT_TYPE_ID,
+                            VALIDATE_ID = add.VALIDATE_ID,
+                            REPORT_CODE = REPORT_CODE,
+                            VALIDATE_X = add.VALIDATE_X,
+                            VALIDATE_Y = add.VALIDATE_Y,
+                            DATA_TYPE = add.DATA_TYPE,
+                            IS_NOTNULL = add.IS_NOTNULL,
+                            REGULAR_EXPRESSIONS = add.REGULAR_EXPRESSIONS,
+                            START_EXCEL_ROW = add.START_EXCEL_ROW,
+                            ACTIVE = "N",
+                            REMARK = "''VALIDATE_X' IS NOT FOUND IN TEMPLATE"
+                        });
+                        output_report.Add(underSelect[0]);
+
+                        //if (output_report.Where(w=>w.VALIDATE_X == add.VALIDATE_X).Count() == item_y.Count())
+                        //{
+                        //    break;
+                        //}                        
+                    }
+
+
+                    this.resultGrid.DataSource = output_report;
+
+                    stream.Close();
+                    excelReader.Close();
+                }
+                catch { MessageBox.Show("KEY!"); }               
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //string path = @"D:\Users\x\Downloads\Compressed\DataGridView_Import_Excel\Sample Excel\validate_XML_life_quarterly_unlock_2-0-0.xlsx";
+                FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                DataSet result = excelReader.AsDataSet();
+
+                //string REPORT_CODE = "ช0200";
+                //string VALIDATE_X = "1.0.0.0.0,1.1.0.0.0,1.2.0.0.0,1.3.0.0.0,2.0.0.0.0";
+                //string VALIDATE_Y = "XB,XC,XD,XE,XF,XG,XH,XI,XJ";
+
+                var area = txtDiff.Text.Replace("\r\n", ",");
+
+                string REPORT_CODE = txtReportCode.Text;
+                string VALIDATE_X = txtValidateX.Text.Replace("\r\n", ",");
+                string VALIDATE_Y = txtValidateY.Text.Replace("\r\n", ",");
+
+               
+
+                var people = new List<DemoModel>();
+                while (excelReader.Read())
+                {
+                    people.Add(new DemoModel
+                    {
+                        COM_GROUP_ID = excelReader.GetString(1),
+                        RPT_TYPE_ID = excelReader.GetString(2),
+                        VALIDATE_ID = excelReader.GetString(3),
+                        VALIDATE_CODE = excelReader.GetString(4),
+                        REPORT_CODE = excelReader.GetString(5),
+                        VALIDATE_X = excelReader.GetString(6),
+                        VALIDATE_Y = excelReader.GetString(7),
+                        DATA_TYPE = excelReader.GetString(8),
+                        IS_NOTNULL = excelReader.GetString(9),
+                        REGULAR_EXPRESSIONS = excelReader.GetString(10),
+                        START_EXCEL_ROW = excelReader.GetString(11),
+                        ACTIVE = excelReader.GetString(12),
+                        REMARK = excelReader.GetString(13)
+                    });
+                }
+
+                var report_model = people.Where(c => c.REPORT_CODE == REPORT_CODE).ToList<DemoModel>();
+                List<DemoModel> output_report = new List<DemoModel>();
+                var item_x = VALIDATE_X.Split(',');
+                var item_y = VALIDATE_Y.Split(',');
+                foreach (var valid_x in item_x)
+                {
+                    var row_x = report_model.Where(c => c.VALIDATE_X == valid_x).ToList<DemoModel>();
+                    if (row_x.Count() > 0)
+                    {
+                        foreach (var valid_y in item_y)
+                        {
+                            var row_y = row_x.Where(c => c.VALIDATE_X == valid_x && c.VALIDATE_Y == valid_y).ToList();
+                            if (row_y.Count() > 1)
+                            {
+                                bool first = true;
+                                foreach (var update in row_y)
+                                {
+                                    if (first)
+                                    {
+                                        update.ACTIVE = "Y";
+                                        output_report.Add(update);
+                                        first = false;
+                                    }
+                                    else
+                                    {
+                                        update.ACTIVE = "N";
+                                        update.REMARK = "DUP";
+                                        output_report.Add(update);
+                                    }
+                                }
+                            }
+                            else if (row_y.Count() == 1)
+                            {
+                                row_y[0].ACTIVE = "Y";
+                                output_report.Add(row_y[0]);
+                            }
+                            else if (row_y.Count() == 0)
+                            {
+                                row_y.Add(new DemoModel
                                 {
                                     COM_GROUP_ID = "",
                                     RPT_TYPE_ID = "",
                                     VALIDATE_ID = "",
                                     REPORT_CODE = REPORT_CODE,
-                                    VALIDATE_X = "INPUTE VALIDATE_X " + valid_x,
+                                    VALIDATE_X = valid_x,
                                     VALIDATE_Y = valid_y,
                                     DATA_TYPE = "",
                                     IS_NOTNULL = "",
                                     REGULAR_EXPRESSIONS = "",
                                     START_EXCEL_ROW = "",
                                     ACTIVE = "N",
-                                    REMARK = "MISS 'VALIDATE_X' IN TEMPLATE"
+                                    REMARK = "MISS 'VALIDATE_Y' IN TEMPLATE"
                                 });
-                                output_report.Add(output[0]);
+                                output_report.Add(row_y[0]);
                             }
                         }
+                    }
+                    else
+                    {
+
+                        foreach (var valid_y in item_y)
+                        {
+                            List<DemoModel> output = new List<DemoModel>();
+                            //old
+                            output.Add(new DemoModel
+                            {
+                                COM_GROUP_ID = "",
+                                RPT_TYPE_ID = "",
+                                VALIDATE_ID = "",
+                                REPORT_CODE = REPORT_CODE,
+                                VALIDATE_X = valid_x,
+                                VALIDATE_Y = valid_y,
+                                DATA_TYPE = "",
+                                IS_NOTNULL = "",
+                                REGULAR_EXPRESSIONS = "",
+                                START_EXCEL_ROW = "",
+                                ACTIVE = "N",
+                                REMARK = "MISS 'VALIDATE_X' IN TEMPLAT"
+                            });
+                            output_report.Add(output[0]);
+
+                            //new
+                            //output = new List<DemoModel>();
+                            //output.Add(new DemoModel
+                            //{
+                            //    COM_GROUP_ID = "",
+                            //    RPT_TYPE_ID = "",
+                            //    VALIDATE_ID = "",
+                            //    REPORT_CODE = REPORT_CODE,
+                            //    VALIDATE_X = "INPUTE VALIDATE_X " + valid_x,
+                            //    VALIDATE_Y = valid_y,
+                            //    DATA_TYPE = "",
+                            //    IS_NOTNULL = "",
+                            //    REGULAR_EXPRESSIONS = "",
+                            //    START_EXCEL_ROW = "",
+                            //    ACTIVE = "N",
+                            //    REMARK = "MISS 'VALIDATE_X' IN TEMPLATE"
+                            //});
+                            //output_report.Add(output[0]);
+                        }
+
+                        List<DemoModel> miss = new List<DemoModel>();
+                        //old บอกให้รู้ว่า valid_x ใดๆ ที่ขาดหายไป
+                        miss.Add(new DemoModel
+                        {
+                            COM_GROUP_ID = "",
+                            RPT_TYPE_ID = "",
+                            VALIDATE_ID = "",
+                            REPORT_CODE = REPORT_CODE,
+                            VALIDATE_X = valid_x,
+                            VALIDATE_Y = "",
+                            DATA_TYPE = "",
+                            IS_NOTNULL = "",
+                            REGULAR_EXPRESSIONS = "",
+                            START_EXCEL_ROW = "",
+                            ACTIVE = "N",
+                            REMARK = "MISE " + valid_x + " IN TEMPLATE"
+                        });
+                        output_report.Add(miss[0]);
 
                     }
 
-                    this.resultGrid.DataSource = output_report;
+                    //del
+                    foreach (var del in row_x)
+                    {
+                        report_model.Remove(del);
+                    }
                 }
-                catch { MessageBox.Show("KEY!"); }               
+
+                //add under select
+                List<DemoModel> underSelect = new List<DemoModel>();
+                foreach (var add in report_model)
+                {
+                    underSelect = new List<DemoModel>();
+                    underSelect.Add(new DemoModel
+                    {
+                        COM_GROUP_ID = add.COM_GROUP_ID,
+                        RPT_TYPE_ID = add.RPT_TYPE_ID,
+                        VALIDATE_ID = add.VALIDATE_ID,
+                        REPORT_CODE = REPORT_CODE,
+                        VALIDATE_X = add.VALIDATE_X,
+                        VALIDATE_Y = add.VALIDATE_Y,
+                        DATA_TYPE = add.DATA_TYPE,
+                        IS_NOTNULL = add.IS_NOTNULL,
+                        REGULAR_EXPRESSIONS = add.REGULAR_EXPRESSIONS,
+                        START_EXCEL_ROW = add.START_EXCEL_ROW,
+                        ACTIVE = "N",
+                        REMARK = "''VALIDATE_X' IS NOT FOUND IN TEMPLATE"
+                    });
+                    output_report.Add(underSelect[0]);
+
+                    if (output_report.Where(w => w.VALIDATE_X == add.VALIDATE_X).Count() == item_y.Count())
+                    {
+                        break;
+                    }
+                }
+
+
+                this.resultGrid.DataSource = output_report;
+
+                stream.Close();
+                excelReader.Close();
             }
+            catch { MessageBox.Show("KEY!"); }
         }
     }
 }

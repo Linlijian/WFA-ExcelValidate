@@ -39,6 +39,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtDiff = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.resultGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,6 +77,7 @@
             this.txtValidateX.Location = new System.Drawing.Point(106, 95);
             this.txtValidateX.Multiline = true;
             this.txtValidateX.Name = "txtValidateX";
+            this.txtValidateX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtValidateX.Size = new System.Drawing.Size(188, 77);
             this.txtValidateX.TabIndex = 3;
             // 
@@ -84,6 +86,7 @@
             this.txtValidateY.Location = new System.Drawing.Point(106, 178);
             this.txtValidateY.Multiline = true;
             this.txtValidateY.Name = "txtValidateY";
+            this.txtValidateY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtValidateY.Size = new System.Drawing.Size(188, 77);
             this.txtValidateY.TabIndex = 4;
             // 
@@ -119,6 +122,7 @@
             this.txtDiff.Location = new System.Drawing.Point(15, 566);
             this.txtDiff.Multiline = true;
             this.txtDiff.Name = "txtDiff";
+            this.txtDiff.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtDiff.Size = new System.Drawing.Size(279, 145);
             this.txtDiff.TabIndex = 8;
             // 
@@ -126,11 +130,25 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // button2
+            // 
+            this.button2.Enabled = false;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(12, 380);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(279, 113);
+            this.button2.TabIndex = 9;
+            this.button2.Text = "CONTINUE";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1358, 723);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.txtDiff);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -162,5 +180,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtDiff;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button button2;
     }
 }

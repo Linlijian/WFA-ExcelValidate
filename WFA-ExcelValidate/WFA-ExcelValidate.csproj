@@ -97,6 +97,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="crr_t_mst_insurance.cs" />
+    <Compile Include="CRR_T_SEC_USERAPP.cs" />
+    <Compile Include="CRR_T_SEC_USRGROUP.cs" />
     <Compile Include="DemoModel.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
